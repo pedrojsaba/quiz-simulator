@@ -355,26 +355,28 @@ function go(view){
 }
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
 
-/* ---------------- resume-on-reload (URL hash only, no storage APIs) ---------------- */
+/* ---------------- resume-on-reload (localStorage) ---------------- */
+const SESSION_KEY='itil4-quiz-session';
 function saveSession(){
   try{
-    if(!session||session.done){ clearSessionHash(); return; }
+    if(!session||session.done){ clearSession(); return; }
     const items=session.items.map(it=>{
       const orig=QMAP.get(it.id);
       return [it.id, it.options.map(o=>orig.options.indexOf(o))];
     });
     const picks=session.picks.map((p,i)=>p==null?-1:session.items[i].options.indexOf(p));
     const state={m:session.mode,l:session.left,p:session.pos,i:items,k:picks};
-    history.replaceState(null,'',location.pathname+location.search+'#s='+encodeURIComponent(JSON.stringify(state)));
+    localStorage.setItem(SESSION_KEY,JSON.stringify(state));
   }catch(e){}
 }
-function clearSessionHash(){
-  try{ if(location.hash) history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+function clearSession(){
+  try{ localStorage.removeItem(SESSION_KEY); }catch(e){}
 }
 function restoreSession(){
   try{
-    if(!location.hash.startsWith('#s=')) return false;
-    const state=JSON.parse(decodeURIComponent(location.hash.slice(3)));
+    const raw=localStorage.getItem(SESSION_KEY);
+    if(!raw) return false;
+    const state=JSON.parse(raw);
     if(!state||!Array.isArray(state.i)||!state.i.length||!Array.isArray(state.k)) return false;
     const items=state.i.map(([id,perm])=>{
       const orig=QMAP.get(id);
@@ -387,7 +389,7 @@ function restoreSession(){
   }catch(e){ return false; }
 }
 function quitExam(){
-  clearSessionHash(); session=null;
+  clearSession(); session=null;
   if(tick){clearInterval(tick);tick=null;}
   go('setup');
 }
@@ -486,7 +488,7 @@ function finishExam(auto){
   }
   if(tick){clearInterval(tick);tick=null;}
   session.done=true;
-  clearSessionHash();
+  clearSession();
   const total=session.items.length;
   let right=0; const byTopic={}, misses=[];
   session.items.forEach((q,i)=>{
