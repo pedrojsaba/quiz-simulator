@@ -252,6 +252,7 @@ footer{border-top:1px solid var(--line);margin-top:2.5rem;padding-top:1.1rem;
 </div>
 
 <script src="questions.js"></script>
+<script src="es.js"></script>
 <script>
 /* ---------------- topic classifier ---------------- */
 const TOPICS=[
@@ -288,6 +289,9 @@ const GLOSSARY=[
  [/\belemento de configuración\b/gi,'configuration item'],
 ];
 function polish(t){GLOSSARY.forEach(([re,to])=>t=t.replace(re,to));return t;}
+function localTranslation(q){
+  return (typeof ES_TRANSLATIONS!=='undefined' && ES_TRANSLATIONS[q.id]) || null;
+}
 const trCache=new Map();
 async function translate(text){
   if(trCache.has(text)) return trCache.get(text);
@@ -314,6 +318,8 @@ async function translateCurrent(){
   if(!box.classList.contains('hidden')){box.classList.add('hidden');btn.textContent='ES · show translation';return;}
   box.classList.remove('hidden'); btn.textContent='ES · hide translation';
   const q=session.items[session.pos];
+  const local=localTranslation(q);
+  if(local){ txt.textContent=local; return; }
   txt.textContent='Traduciendo…';
   const t=await translate(q.question);
   txt.textContent = t || 'No se pudo traducir ahora — el servicio de traducción no respondió. Reintentá en unos segundos.';
@@ -507,6 +513,8 @@ function renderBrowse(){
     tb.onclick=async()=>{
       if(!tv.classList.contains('hidden')){tv.classList.add('hidden');tb.textContent='ES · show translation';return;}
       tv.classList.remove('hidden'); tb.textContent='ES · hide translation';
+      const local=localTranslation(q);
+      if(local){ tv.lastChild.textContent=local; return; }
       tv.lastChild.textContent='Traduciendo…';
       const r=await translate(q.question);
       tv.lastChild.textContent=r||'No se pudo traducir ahora — reintentá en unos segundos.';
