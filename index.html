@@ -60,18 +60,26 @@ nav button:focus-visible,button:focus-visible,a:focus-visible,input:focus-visibl
   display:flex;justify-content:space-between;gap:1rem;margin-bottom:.7rem;flex-wrap:wrap}
 .qtext{font-family:var(--display);font-size:1.12rem;font-weight:500;letter-spacing:-.01em;
   line-height:1.4;margin-bottom:.35rem}
-.trbar{margin:.5rem 0 1.1rem}
-.trbtn{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;
-  background:none;border:1px dashed var(--line);color:var(--mute);padding:.32rem .6rem;
-  border-radius:2px;cursor:pointer}
-.trbtn:hover{color:var(--signal);border-color:var(--signal)}
-.tr{border-left:2px solid var(--signal);background:#171d25;padding:.65rem .8rem;margin-top:.55rem;
-  font-size:.92rem;color:#c9d3e0;font-style:italic;border-radius:0 2px 2px 0}
-.tr .tag{font-family:var(--mono);font-style:normal;font-size:.6rem;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--mute);display:block;margin-bottom:.25rem}
+
+/* ---- translation tooltip ---- */
+.trword{position:relative;display:inline-block;margin-left:.3rem;vertical-align:.15em}
+.trbadge{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--mute);border:1px dashed var(--line);border-radius:2px;padding:.1rem .32rem;
+  cursor:help;background:none;line-height:1.4}
+.trbadge:hover,.trbadge:focus-visible{color:var(--signal);border-color:var(--signal);outline:none}
+.bubble{position:absolute;left:50%;bottom:calc(100% + .4rem);transform:translateX(-50%) translateY(4px);
+  width:max-content;max-width:min(22rem,80vw);background:#171d25;border:1px solid var(--signal);
+  border-radius:2px;padding:.55rem .7rem;font-size:.85rem;color:#c9d3e0;font-style:italic;
+  line-height:1.4;opacity:0;visibility:hidden;transition:.12s;z-index:30;pointer-events:none;text-align:left}
+.trword:hover .bubble,.trword:focus-within .bubble,.trword.show .bubble{
+  opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.bubble .tag{display:block;font-family:var(--mono);font-style:normal;font-size:.58rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--mute);margin-bottom:.25rem}
 
 .opts{display:flex;flex-direction:column;gap:.5rem}
-.opt{display:flex;gap:.7rem;align-items:flex-start;text-align:left;width:100%;
+.opt-row{display:flex;gap:.4rem;align-items:stretch}
+.opt-row .trword{flex:none;display:flex;align-items:center;margin-left:0}
+.opt{display:flex;gap:.7rem;align-items:flex-start;text-align:left;width:100%;flex:1;min-width:0;
   background:var(--ink);border:1px solid var(--line);color:var(--paper);padding:.75rem .8rem;
   border-radius:2px;cursor:pointer;font:inherit;font-size:.95rem;line-height:1.4;transition:.12s}
 .opt:hover:not(:disabled){border-color:var(--mute)}
@@ -140,6 +148,7 @@ details.item[open]>summary{border-bottom:1px solid var(--line)}
 .body{padding:.85rem .9rem}
 .ans{display:flex;gap:.6rem;font-size:.92rem;padding:.35rem 0;align-items:flex-start}
 .ans .m{font-family:var(--mono);font-size:.7rem;flex:none;width:1.1rem;color:var(--mute)}
+.ans .trword{margin-left:.4rem}
 .ans.is-right{color:var(--pass)} .ans.is-right .m{color:var(--pass)}
 .flagline{font-family:var(--mono);font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;
   color:var(--warn);margin-top:.6rem;border-top:1px dashed var(--line);padding-top:.5rem}
@@ -180,8 +189,8 @@ footer{border-top:1px solid var(--line);margin-top:2.5rem;padding-top:1.1rem;
         <option value="0">Everything in the bank</option>
       </select>
     </div>
-    <p class="note">Questions are drawn at random and shuffled, options included. Press
-      <b>ES</b> on any question to see a Spanish translation — you answer in English, the way the real exam is set.</p>
+    <p class="note">Questions are drawn at random and shuffled, options included. Hover or tap
+      <b>ES</b> next to any question or answer to see a Spanish translation — you answer in English, the way the real exam is set.</p>
     <div class="actions"><button class="btn primary" onclick="startExam()">Start exam</button></div>
   </div>
 </section>
@@ -197,10 +206,6 @@ footer{border-top:1px solid var(--line);margin-top:2.5rem;padding-top:1.1rem;
   <div class="card">
     <div class="qid"><span id="q-id"></span><span id="q-flag"></span></div>
     <div class="qtext" id="q-text"></div>
-    <div class="trbar">
-      <button class="trbtn" id="q-tr-btn" onclick="translateCurrent()">ES · show translation</button>
-      <div class="tr hidden" id="q-tr"><span class="tag">Traducción automática</span><span id="q-tr-text"></span></div>
-    </div>
     <div class="opts" id="q-opts"></div>
     <div class="actions">
       <button class="btn" onclick="move(-1)">Previous</button>
@@ -289,8 +294,30 @@ const GLOSSARY=[
  [/\belemento de configuración\b/gi,'configuration item'],
 ];
 function polish(t){GLOSSARY.forEach(([re,to])=>t=t.replace(re,to));return t;}
-function localTranslation(q){
-  return (typeof ES_TRANSLATIONS!=='undefined' && ES_TRANSLATIONS[q.id]) || null;
+function esEntry(id){
+  return (typeof ES_TRANSLATIONS!=='undefined' && ES_TRANSLATIONS[id]) || null;
+}
+function trBadge(enText,localText){
+  const wrap=document.createElement('span'); wrap.className='trword';
+  const badge=document.createElement('button'); badge.type='button'; badge.className='trbadge';
+  badge.textContent='ES'; badge.setAttribute('aria-label','Ver traducción');
+  const bubble=document.createElement('span'); bubble.className='bubble';
+  const tag=document.createElement('span'); tag.className='tag'; tag.textContent='Traducción automática';
+  const body=document.createElement('span'); body.textContent=localText||'…';
+  bubble.append(tag,body);
+  wrap.append(badge,bubble);
+  let ready=!!localText, loading=false;
+  async function ensure(){
+    if(ready||loading) return;
+    loading=true; body.textContent='Traduciendo…';
+    const t=await translate(enText);
+    body.textContent=t||'No se pudo traducir ahora — reintentá en unos segundos.';
+    ready=true; loading=false;
+  }
+  badge.addEventListener('mouseenter',ensure);
+  badge.addEventListener('focus',ensure);
+  badge.addEventListener('click',e=>{ e.stopPropagation(); wrap.classList.toggle('show'); ensure(); });
+  return wrap;
 }
 const trCache=new Map();
 async function translate(text){
@@ -312,22 +339,10 @@ async function translate(text){
     return res;
   }catch(e){ return null; }
 }
-async function translateCurrent(){
-  const box=document.getElementById('q-tr'), txt=document.getElementById('q-tr-text');
-  const btn=document.getElementById('q-tr-btn');
-  if(!box.classList.contains('hidden')){box.classList.add('hidden');btn.textContent='ES · show translation';return;}
-  box.classList.remove('hidden'); btn.textContent='ES · hide translation';
-  const q=session.items[session.pos];
-  const local=localTranslation(q);
-  if(local){ txt.textContent=local; return; }
-  txt.textContent='Traduciendo…';
-  const t=await translate(q.question);
-  txt.textContent = t || 'No se pudo traducir ahora — el servicio de traducción no respondió. Reintentá en unos segundos.';
-}
-
 /* ---------------- state ---------------- */
 let session=null, tick=null;
 const $=id=>document.getElementById(id);
+const QMAP=new Map(QUESTIONS.map(q=>[q.id,q]));
 document.getElementById('banktag').textContent=QUESTIONS.length+' questions · deduplicated · answers adjudicated';
 
 function go(view){
@@ -382,15 +397,17 @@ function paintRail(){
 }
 function renderQ(){
   const q=session.items[session.pos];
+  const es=esEntry(q.id), orig=QMAP.get(q.id);
   $('m-pos').textContent=session.pos+1;
   $('m-done').textContent=session.picks.filter(p=>p!=null).length;
   $('q-id').textContent=q.id.toUpperCase()+' · '+q.topic;
   $('q-flag').textContent=q.needs_review?'⚑ flagged — sources disagree':'';
-  $('q-text').textContent=q.question;
-  $('q-tr').classList.add('hidden'); $('q-tr-btn').textContent='ES · show translation';
+  const qtextEl=$('q-text'); qtextEl.innerHTML='';
+  qtextEl.append(document.createTextNode(q.question), trBadge(q.question, es&&es.q));
   const box=$('q-opts'); box.innerHTML='';
   const reveal=session.mode==='practice'&&session.picks[session.pos]!=null;
   q.options.forEach((o,i)=>{
+    const row=document.createElement('div'); row.className='opt-row';
     const b=document.createElement('button');
     b.type='button'; b.className='opt';
     b.setAttribute('aria-pressed',session.picks[session.pos]===o);
@@ -401,7 +418,10 @@ function renderQ(){
       if(q.answers.includes(o)) b.classList.add('correct');
       else if(session.picks[session.pos]===o) b.classList.add('wrong');
     } else b.onclick=()=>pick(o);
-    box.appendChild(b);
+    row.appendChild(b);
+    const oi=orig.options.indexOf(o);
+    row.appendChild(trBadge(o, es&&es.o&&es.o[oi]));
+    box.appendChild(row);
   });
   paintRail();
 }
@@ -487,11 +507,12 @@ function renderBrowse(){
   $('b-count').textContent=list.length+' of '+QUESTIONS.length+' questions';
   const box=$('b-list'); box.innerHTML='';
   list.slice(0,400).forEach(q=>{
+    const es=esEntry(q.id);
     const d=document.createElement('details'); d.className='item';
     const s=document.createElement('summary');
     const n=document.createElement('span'); n.className='n'; n.textContent=q.id.toUpperCase();
     const t=document.createElement('span'); t.textContent=q.question;
-    s.append(n,t); d.appendChild(s);
+    s.append(n,t,trBadge(q.question, es&&es.q)); d.appendChild(s);
     const b=document.createElement('div'); b.className='body';
     q.options.forEach((o,i)=>{
       const r=document.createElement('div');
@@ -499,27 +520,13 @@ function renderBrowse(){
       const m=document.createElement('span'); m.className='m';
       m.textContent=q.answers.includes(o)?'✓':'ABCDEFGH'[i];
       const x=document.createElement('span'); x.textContent=o;
-      r.append(m,x); b.appendChild(r);
+      r.append(m,x,trBadge(o, es&&es.o&&es.o[i])); b.appendChild(r);
     });
     const meta=document.createElement('div'); meta.className='src';
     meta.textContent=q.topic+' · '+(q.sources[0]==='original'?'original — exam-style':q.sources.join(', '))+(q.adjudicated?' · answer corrected':'');
     b.appendChild(meta);
     if(q.needs_review){const f=document.createElement('div');f.className='flagline';
       f.textContent='⚑ Sources disagree — verify against the official syllabus';b.appendChild(f);}
-    const tb=document.createElement('button'); tb.className='trbtn'; tb.style.marginTop='.6rem';
-    tb.textContent='ES · show translation';
-    const tv=document.createElement('div'); tv.className='tr hidden';
-    tv.innerHTML='<span class="tag">Traducción automática</span><span></span>';
-    tb.onclick=async()=>{
-      if(!tv.classList.contains('hidden')){tv.classList.add('hidden');tb.textContent='ES · show translation';return;}
-      tv.classList.remove('hidden'); tb.textContent='ES · hide translation';
-      const local=localTranslation(q);
-      if(local){ tv.lastChild.textContent=local; return; }
-      tv.lastChild.textContent='Traduciendo…';
-      const r=await translate(q.question);
-      tv.lastChild.textContent=r||'No se pudo traducir ahora — reintentá en unos segundos.';
-    };
-    b.append(tb,tv);
     d.appendChild(b); box.appendChild(d);
   });
   if(list.length>400){const p=document.createElement('div');p.className='count';
@@ -532,7 +539,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight')move(1);
   if(e.key==='ArrowLeft')move(-1);
   const i='abcdefgh'.indexOf(e.key.toLowerCase());
-  if(i>=0){const b=$('q-opts').children[i]; if(b&&!b.disabled)b.click();}
+  if(i>=0){const b=$('q-opts').querySelectorAll('.opt')[i]; if(b&&!b.disabled)b.click();}
 });
 go('setup');
 </script>

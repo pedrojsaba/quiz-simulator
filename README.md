@@ -7,7 +7,10 @@ public GitHub question banks with duplicates removed and conflicting answers adj
 - **Practice mode** — instant feedback per question.
 - **Question bank** — search and filter all 691 questions with their answers.
 - **Exam-style set** — 79 original questions using the list-select ("1 and 3"), negative-stem and applied-scenario formats the real exam favours. Written from the syllabus, not copied from any official paper. 60 questions bank-wide now use the list-select format (up from 12), covering all 11 syllabus areas.
-- **ES translation** — press `ES` on any question for a Spanish translation. All 691 question stems are pre-translated in `es.js` (no network call, no rate limit); the on-demand `mymemory.translated.net` fetch only kicks in as a fallback for any id missing from that file.
+- **ES translation** — hover or tap the small `ES` tag next to any question or answer option
+  for an inline Spanish translation tooltip. All 691 question stems and their options are
+  pre-translated in `es.js` (no network call, no rate limit); the on-demand
+  `mymemory.translated.net` fetch only kicks in as a fallback for anything missing from that file.
   Questions stay in English, as on the real exam.
 - Keyboard: `A`–`D` to answer, arrow keys to navigate.
 
