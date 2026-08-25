@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ITIL 4 Foundation — Exam Simulator</title>
+<title>Datadog Fundamentals — Exam Simulator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -27,12 +27,16 @@ header{border-bottom:1px solid var(--line);padding:1.5rem 0 1.1rem;margin-bottom
 .brand span{color:var(--signal)}
 .sub{font-family:var(--mono);font-size:.7rem;color:var(--mute);text-transform:uppercase;
   letter-spacing:.14em;margin-top:.45rem}
-nav{display:flex;gap:.4rem;margin-top:1.1rem;flex-wrap:wrap}
+nav{display:flex;gap:.4rem;margin-top:1.1rem;flex-wrap:wrap;align-items:center}
 nav button{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
   background:none;border:1px solid var(--line);color:var(--mute);padding:.5rem .85rem;
   border-radius:2px;cursor:pointer;transition:.15s}
 nav button:hover{color:var(--paper);border-color:var(--mute)}
 nav button[aria-current="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+nav select{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--ink);border:1px solid var(--line);color:var(--paper);padding:.5rem .6rem;
+  border-radius:2px;cursor:pointer;margin-right:.3rem}
+nav select:hover{border-color:var(--mute)}
 nav button:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   outline:2px solid var(--signal);outline-offset:2px}
 
@@ -162,9 +166,13 @@ footer{border-top:1px solid var(--line);margin-top:2.5rem;padding-top:1.1rem;
 <body>
 <div class="wrap">
 <header>
-  <div class="brand">ITIL 4 Foundation<br><span>Exam Simulator</span></div>
+  <div class="brand"><span id="brand-name">Datadog Fundamentals</span><br><span id="brand-span">Exam Simulator</span></div>
   <div class="sub" id="banktag">— questions</div>
   <nav>
+    <select id="subject-select" onchange="switchSubject(this.value)" aria-label="Subject">
+      <option value="datadog">Datadog Fundamentals</option>
+      <option value="itil">ITIL 4 Foundation</option>
+    </select>
     <button id="nav-exam" onclick="go('setup')">Exam</button>
     <button id="nav-browse" onclick="go('browse')">Question bank</button>
   </nav>
@@ -176,7 +184,7 @@ footer{border-top:1px solid var(--line);margin-top:2.5rem;padding-top:1.1rem;
     <div class="field">
       <label for="mode">Mode</label>
       <select id="mode">
-        <option value="exam">Exam simulation — 40 questions, 60 minutes, 65% to pass</option>
+        <option id="mode-exam-opt" value="exam">Exam simulation</option>
         <option value="practice">Practice — instant feedback after each answer</option>
       </select>
     </div>
@@ -249,36 +257,106 @@ footer{border-top:1px solid var(--line);margin-top:2.5rem;padding-top:1.1rem;
   <div id="b-list"></div>
 </section>
 
-<footer>
+<footer id="site-footer">
   Consolidated from public GitHub question banks (Ditectrev, mtvbrianking) — duplicates merged,
   conflicting answers adjudicated against ITIL 4 doctrine. Study aid only; not affiliated with
   or endorsed by AXELOS or PeopleCert. ITIL® is a registered trade mark of AXELOS Limited.
 </footer>
 </div>
 
-<script src="questions.js"></script>
-<script src="es.js"></script>
+<script src="data/questions-itil.js"></script>
+<script src="data/es-itil.js"></script>
+<script src="data/questions-datadog.js"></script>
 <script>
 /* ---------------- topic classifier ---------------- */
-const TOPICS=[
+const TOPICS_ITIL=[
  ['Guiding principles',/guiding principle|focus on value|start where you are|progress iteratively|collaborate and promote|think and work holistically|keep it simple|optimize and automate|optimise and automate/i],
  ['Four dimensions',/four dimensions|which dimension|dimension of service management|organizations and people|partners and suppliers|value streams and processes/i],
- ['Service value system',/service value system|svs|governance|opportunity and demand|continual improvement model|continual improvement/i],
+ ['Service value system',/service value system|\bsvs\b|governance|opportunity and demand|continual improvement model|continual improvement/i],
  ['Service value chain',/value chain|deliver and support|design and transition|obtain\/build/i],
- ['Change enablement',/change enablement|change control|normal change|standard change|emergency change|change schedule|change authority|change.*(authoriz|assess|schedul)/i],
+ ['Change enablement',/change enablement|change control|normal change|standard change|emergency change|change schedule|change authority|\bchange\b.*\b(authoriz|assess|schedul)/i],
  ['Service desk & requests',/service desk|service request|request management|single point of contact/i],
- ['Service level & relationships',/service level|sla|relationship management|supplier management|watermelon|agreed.*targets/i],
+ ['Service level & relationships',/service level|\bsla\b|relationship management|supplier management|watermelon|agreed.*targets/i],
  ['Monitoring, deployment & release',/monitoring|event management|deployment|release management|configuration management|asset management|configuration item/i],
  ['Incident & problem',/incident|problem|known error|workaround/i],
- ['Key concepts',/utility|warranty|outcome|output|co-creation|service offering|stakeholder|sponsor|consumer|risk|cost|what is a service|definition of a service|service relationship/i],
+ ['Key concepts',/utility|warranty|outcome|output|co-creation|service offering|stakeholder|sponsor|consumer|\brisk\b|\bcost\b|what is a service|definition of a service|service relationship/i],
 ];
-function topicOf(q){
-  for(const [name,re] of TOPICS) if(re.test(q.question)) return name;
+function topicOf(q,topics){
+  for(const [name,re] of topics) if(re.test(q.question)) return name;
   const hay=q.question+' '+q.options.join(' ');
-  for(const [name,re] of TOPICS) if(re.test(hay)) return name;
+  for(const [name,re] of topics) if(re.test(hay)) return name;
   return 'General';
 }
-QUESTIONS.forEach(q=>q.topic=q.topic_hint||topicOf(q));
+function ensureTopics(subject){
+  subject.questions.forEach(q=>{ if(!q.topic) q.topic=q.topic_hint||topicOf(q,subject.topics); });
+}
+
+/* ---------------- subjects ---------------- */
+const SUBJECTS={
+  itil:{
+    id:'itil', brand:'ITIL 4 Foundation', brandSpan:'Exam Simulator',
+    title:'ITIL 4 Foundation — Exam Simulator',
+    questions:QUESTIONS_ITIL,
+    es:(typeof ES_TRANSLATIONS_ITIL!=='undefined')?ES_TRANSLATIONS_ITIL:{},
+    topics:TOPICS_ITIL,
+    passPct:65, secPerQ:90,
+    lenOptions:[[40,'40 questions (official exam length)'],[20,'20 questions'],[60,'60 questions'],[0,'Everything in the bank']],
+    defaultLen:'40',
+    bankTag:'deduplicated · answers adjudicated',
+    footer:'Consolidated from public GitHub question banks (Ditectrev, mtvbrianking) — duplicates merged, conflicting answers adjudicated against ITIL 4 doctrine. Study aid only; not affiliated with or endorsed by AXELOS or PeopleCert. ITIL® is a registered trade mark of AXELOS Limited.'
+  },
+  datadog:{
+    id:'datadog', brand:'Datadog Fundamentals', brandSpan:'Exam Simulator',
+    title:'Datadog Fundamentals — Exam Simulator',
+    questions:(typeof QUESTIONS_DATADOG!=='undefined')?QUESTIONS_DATADOG:[],
+    es:(typeof ES_TRANSLATIONS_DATADOG!=='undefined')?ES_TRANSLATIONS_DATADOG:{},
+    topics:[],
+    passPct:60, secPerQ:90,
+    lenOptions:[[90,'90 questions (official exam length)'],[40,'40 questions'],[20,'20 questions'],[0,'Everything in the bank']],
+    defaultLen:'90',
+    bankTag:'community exam-prep bank',
+    footer:'Community practice questions covering the Datadog Fundamentals certification syllabus. Study aid only; not affiliated with or endorsed by Datadog, Inc. ES tooltips for this bank are translated on demand rather than pre-translated.'
+  }
+};
+const SUBJECT_KEY='quiz-subject';
+let SUBJECT=null, QMAP=null, browseInitedFor=null;
+function populateLenOptions(){
+  const sel=$('len'); sel.innerHTML='';
+  SUBJECT.lenOptions.forEach(([val,label])=>{
+    const o=document.createElement('option'); o.value=val; o.textContent=label; sel.appendChild(o);
+  });
+  sel.value=SUBJECT.defaultLen;
+}
+function setSubject(id){
+  const s=SUBJECTS[id];
+  if(!s) return;
+  SUBJECT=s;
+  ensureTopics(s);
+  QMAP=new Map(s.questions.map(q=>[q.id,q]));
+  try{ localStorage.setItem(SUBJECT_KEY,id); }catch(e){}
+  document.title=s.title;
+  $('brand-name').textContent=s.brand;
+  $('brand-span').textContent=s.brandSpan;
+  $('banktag').textContent=s.questions.length+' questions · '+s.bankTag;
+  $('subject-select').value=id;
+  $('site-footer').textContent=s.footer;
+  const mins=Math.round(Number(s.defaultLen)*s.secPerQ/60);
+  $('mode-exam-opt').textContent='Exam simulation — '+s.defaultLen+' questions, '+mins+' minutes, '+s.passPct+'% to pass';
+  populateLenOptions();
+  browseInitedFor=null;
+}
+function switchSubject(id){
+  if(!SUBJECT||id===SUBJECT.id) return;
+  if(session && !session.done){
+    if(!confirm('Switching subject will discard your current exam progress. Continue?')){
+      $('subject-select').value=SUBJECT.id; return;
+    }
+    clearSession(); session=null;
+    if(tick){clearInterval(tick);tick=null;}
+  }
+  setSubject(id);
+  go('setup');
+}
 
 /* ---------------- translation (runtime, no key) ---------------- */
 const GLOSSARY=[
@@ -295,7 +373,7 @@ const GLOSSARY=[
 ];
 function polish(t){GLOSSARY.forEach(([re,to])=>t=t.replace(re,to));return t;}
 function esEntry(id){
-  return (typeof ES_TRANSLATIONS!=='undefined' && ES_TRANSLATIONS[id]) || null;
+  return (SUBJECT && SUBJECT.es[id]) || null;
 }
 function trBadge(enText,localText){
   const wrap=document.createElement('span'); wrap.className='trword';
@@ -342,21 +420,19 @@ async function translate(text){
 /* ---------------- state ---------------- */
 let session=null, tick=null;
 const $=id=>document.getElementById(id);
-const QMAP=new Map(QUESTIONS.map(q=>[q.id,q]));
-document.getElementById('banktag').textContent=QUESTIONS.length+' questions · deduplicated · answers adjudicated';
 
 function go(view){
   ['setup','exam','result','browse'].forEach(v=>$('v-'+v).classList.toggle('hidden',v!==view));
   $('nav-exam').setAttribute('aria-current',view==='setup'||view==='exam'||view==='result');
   $('nav-browse').setAttribute('aria-current',view==='browse');
   if(view!=='exam'&&tick){clearInterval(tick);tick=null;}
-  if(view==='browse'&&!$('f-topic').options.length) initBrowse();
+  if(view==='browse'&&browseInitedFor!==SUBJECT.id) initBrowse();
   window.scrollTo(0,0);
 }
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
 
 /* ---------------- resume-on-reload (localStorage) ---------------- */
-const SESSION_KEY='itil4-quiz-session';
+const SESSION_KEY='quiz-session';
 function saveSession(){
   try{
     if(!session||session.done){ clearSession(); return; }
@@ -365,7 +441,7 @@ function saveSession(){
       return [it.id, it.options.map(o=>orig.options.indexOf(o))];
     });
     const picks=session.picks.map((p,i)=>p==null?-1:session.items[i].options.indexOf(p));
-    const state={m:session.mode,l:session.left,p:session.pos,i:items,k:picks};
+    const state={subj:SUBJECT.id,m:session.mode,l:session.left,p:session.pos,i:items,k:picks};
     localStorage.setItem(SESSION_KEY,JSON.stringify(state));
   }catch(e){}
 }
@@ -378,6 +454,7 @@ function restoreSession(){
     if(!raw) return false;
     const state=JSON.parse(raw);
     if(!state||!Array.isArray(state.i)||!state.i.length||!Array.isArray(state.k)) return false;
+    if(state.subj && SUBJECTS[state.subj] && state.subj!==SUBJECT.id) setSubject(state.subj);
     const items=state.i.map(([id,perm])=>{
       const orig=QMAP.get(id);
       if(!orig) throw new Error('unknown id '+id);
@@ -396,11 +473,11 @@ function quitExam(){
 
 function startExam(){
   const mode=$('mode').value, n=parseInt($('len').value,10);
-  const pool=shuffle(QUESTIONS);
+  const pool=shuffle(SUBJECT.questions);
   const picked=(n===0?pool:pool.slice(0,Math.min(n,pool.length)));
   session={mode,items:picked.map(q=>({...q,options:shuffle(q.options)})),
     picks:new Array(picked.length).fill(null),pos:0,
-    left:mode==='exam'?Math.round(picked.length*90):null,done:false};
+    left:mode==='exam'?Math.round(picked.length*SUBJECT.secPerQ):null,done:false};
   enterExam();
 }
 function enterExam(){
@@ -476,6 +553,7 @@ function pick(o){
   else { renderQ(); if(session.pos<session.items.length-1) setTimeout(()=>move(1),120); }
 }
 function move(d){
+  if(!session) return;
   const n=session.pos+d;
   if(n<0||n>=session.items.length) return;
   session.pos=n; renderQ(); saveSession();
@@ -497,16 +575,16 @@ function finishExam(auto){
     byTopic[q.topic].n++; if(ok){right++;byTopic[q.topic].ok++;}
     else misses.push({q,p});
   });
-  const pct=Math.round(right/total*100), passed=pct>=65;
+  const pct=Math.round(right/total*100), passed=pct>=SUBJECT.passPct;
   $('verdict').className='verdict '+(passed?'pass':'fail');
   $('r-word').textContent=passed?'PASS':'NOT YET';
-  $('r-score').textContent=right+' of '+total+' correct · '+pct+'% · pass mark 65%'+
+  $('r-score').textContent=right+' of '+total+' correct · '+pct+'% · pass mark '+SUBJECT.passPct+'%'+
     (auto?' · time expired':'');
   const bars=$('r-bars'); bars.innerHTML='<div class="count">Where you stand, by syllabus area</div>';
   Object.entries(byTopic).sort((a,b)=>a[1].ok/a[1].n-b[1].ok/b[1].n).forEach(([t,d])=>{
     const p=Math.round(d.ok/d.n*100);
     const el=document.createElement('div');
-    el.className='bar'+(p<65?' weak':'');
+    el.className='bar'+(p<SUBJECT.passPct?' weak':'');
     el.innerHTML='<div class="lbl"><span></span><span>'+d.ok+'/'+d.n+' · '+p+'%</span></div>'+
       '<div class="track"><div class="fill" style="width:'+p+'%"></div></div>';
     el.querySelector('.lbl span').textContent=t;
@@ -535,22 +613,23 @@ function finishExam(auto){
 function initBrowse(){
   const sel=$('f-topic');
   sel.innerHTML='<option value="">All areas</option>';
-  [...new Set(QUESTIONS.map(q=>q.topic))].sort().forEach(t=>{
+  [...new Set(SUBJECT.questions.map(q=>q.topic))].sort().forEach(t=>{
     const o=document.createElement('option'); o.value=t; o.textContent=t; sel.appendChild(o);
   });
+  browseInitedFor=SUBJECT.id;
   renderBrowse();
 }
 function renderBrowse(){
   const term=$('f-text').value.trim().toLowerCase();
   const topic=$('f-topic').value, only=$('f-only').value;
-  const list=QUESTIONS.filter(q=>{
+  const list=SUBJECT.questions.filter(q=>{
     if(topic&&q.topic!==topic) return false;
     if(only==='adj'&&!q.adjudicated) return false;
     if(only==='rev'&&!q.needs_review) return false;
     if(term&&!(q.question+' '+q.options.join(' ')).toLowerCase().includes(term)) return false;
     return true;
   });
-  $('b-count').textContent=list.length+' of '+QUESTIONS.length+' questions';
+  $('b-count').textContent=list.length+' of '+SUBJECT.questions.length+' questions';
   const box=$('b-list'); box.innerHTML='';
   list.slice(0,400).forEach(q=>{
     const es=esEntry(q.id);
@@ -587,6 +666,14 @@ document.addEventListener('keydown',e=>{
   const i='abcdefgh'.indexOf(e.key.toLowerCase());
   if(i>=0){const b=$('q-opts').querySelectorAll('.opt')[i]; if(b&&!b.disabled)b.click();}
 });
+(function(){
+  let initial='datadog';
+  try{
+    const saved=localStorage.getItem(SUBJECT_KEY);
+    if(saved && SUBJECTS[saved]) initial=saved;
+  }catch(e){}
+  setSubject(initial);
+})();
 if(restoreSession()) enterExam(); else go('setup');
 </script>
 </body>
