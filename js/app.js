@@ -65,11 +65,11 @@ vcp:{
   questions:(typeof QUESTIONS_VCP!=='undefined')?QUESTIONS_VCP:[],
   es:(typeof ES_TRANSLATIONS_VCP!=='undefined')?ES_TRANSLATIONS_VCP:{},
   topics:[],
-  passPct:70, secPerQ:90,
+  passPct:60, secPerQ:135,
   lenOptions:[[60,'60 questions'],[40,'40 questions'],[20,'20 questions'],[0,'Everything in the bank']],
   defaultLen:'60',
   bankTag:'VCF Build/Manage/Secure + Automate/Operate',
-  footer:'Original practice questions written from the VMware Cloud Foundation 9.0 Build, Manage, and Secure and Automate and Operate lecture manuals. Question count, time limit, and pass mark are estimates, not the official exam values. Study aid only; not affiliated with or endorsed by Broadcom or VMware. ES tooltips are translated on demand.'
+  footer:'Original practice questions written from the VMware Cloud Foundation 9.0 Build, Manage, and Secure and Automate and Operate lecture manuals. Exam length and time follow the published VCP-VCF Administrator format (60 questions, 135 minutes); the official pass mark is a scaled 300 of 500, shown here as an approximate 60%. Study aid only; not affiliated with or endorsed by Broadcom or VMware. ES tooltips are translated on demand.'
 }
 };
 const SUBJECT_KEY='quiz-subject';
