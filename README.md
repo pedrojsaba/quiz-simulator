@@ -7,6 +7,8 @@ Timed exam simulator supporting multiple certification subjects, picked from a s
 - **Datadog Fundamentals** (default) — 90 community practice questions covering the certification syllabus (systems/networking basics, the Agent, tags & metrics, dashboards, monitors, APM, logs, integrations). Exam mode: 90 questions, 135 minutes, 60% to pass.
 - **ITIL 4 Foundation** — 691 questions (612 consolidated from public banks plus 79 original exam-style questions), merged from public GitHub question banks with duplicates removed and conflicting answers adjudicated. Exam mode: 40 questions, 60 minutes, 65% to pass.
 
+- **VMware VCTA** — 139 original questions (25 with diagrams) written from the VMware Cloud Foundation 9.0 *Compute*, *Network*, and *Storage Fundamentals* lecture manuals. Exam length, time, and pass mark (40 q, 60 min, 70%) are estimates, not official values.
+
 Adding another subject means dropping a `questions-<subject>.js` file (and optionally an `es-<subject>.js` translation file) into `data/`, then registering it in the `SUBJECTS` map in `index.html`.
 
 ## Features
@@ -28,6 +30,8 @@ data/img/                   question exhibit images (optional `image` field)
 data/questions-itil.js      QUESTIONS_ITIL
 data/es-itil.js             ES_TRANSLATIONS_ITIL
 data/questions-datadog.js   QUESTIONS_DATADOG
+data/questions-vcta.js      QUESTIONS_VCTA
+data/img/vcta/              diagrams extracted from the VCTA lecture manuals
 ```
 
 ## Publish on GitHub Pages

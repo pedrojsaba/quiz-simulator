@@ -46,6 +46,18 @@ datadog:{
   defaultLen:'90',
   bankTag:'community exam-prep bank',
   footer:'Community practice questions covering the Datadog Fundamentals certification syllabus. Study aid only; not affiliated with or endorsed by Datadog, Inc. ES tooltips for this bank are translated on demand rather than pre-translated.'
+},
+vcta:{
+  id:'vcta', brand:'VMware VCTA', brandSpan:'Exam Simulator',
+  title:'VMware VCTA — Exam Simulator',
+  questions:(typeof QUESTIONS_VCTA!=='undefined')?QUESTIONS_VCTA:[],
+  es:(typeof ES_TRANSLATIONS_VCTA!=='undefined')?ES_TRANSLATIONS_VCTA:{},
+  topics:[],
+  passPct:70, secPerQ:90,
+  lenOptions:[[40,'40 questions'],[20,'20 questions'],[60,'60 questions'],[0,'Everything in the bank']],
+  defaultLen:'40',
+  bankTag:'VCF Compute, Network & Storage Fundamentals',
+  footer:'Original practice questions written from the VMware Cloud Foundation 9.0 Compute, Network, and Storage Fundamentals lecture manuals. Question count, time limit, and pass mark are estimates, not the official exam values. Study aid only; not affiliated with or endorsed by Broadcom or VMware. ES tooltips are translated on demand.'
 }
 };
 const SUBJECT_KEY='quiz-subject';
