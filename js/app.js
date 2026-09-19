@@ -58,6 +58,18 @@ vcta:{
   defaultLen:'40',
   bankTag:'VCF Compute, Network & Storage Fundamentals',
   footer:'Original practice questions written from the VMware Cloud Foundation 9.0 Compute, Network, and Storage Fundamentals lecture manuals. Question count, time limit, and pass mark are estimates, not the official exam values. Study aid only; not affiliated with or endorsed by Broadcom or VMware. ES tooltips are translated on demand.'
+},
+vcp:{
+  id:'vcp', brand:'VMware VCP-VCF', brandSpan:'Exam Simulator',
+  title:'VMware VCP-VCF — Exam Simulator',
+  questions:(typeof QUESTIONS_VCP!=='undefined')?QUESTIONS_VCP:[],
+  es:(typeof ES_TRANSLATIONS_VCP!=='undefined')?ES_TRANSLATIONS_VCP:{},
+  topics:[],
+  passPct:70, secPerQ:90,
+  lenOptions:[[60,'60 questions'],[40,'40 questions'],[20,'20 questions'],[0,'Everything in the bank']],
+  defaultLen:'60',
+  bankTag:'VCF Build/Manage/Secure + Automate/Operate',
+  footer:'Original practice questions written from the VMware Cloud Foundation 9.0 Build, Manage, and Secure and Automate and Operate lecture manuals. Question count, time limit, and pass mark are estimates, not the official exam values. Study aid only; not affiliated with or endorsed by Broadcom or VMware. ES tooltips are translated on demand.'
 }
 };
 const SUBJECT_KEY='quiz-subject';
