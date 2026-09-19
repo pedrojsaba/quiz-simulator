@@ -1,10 +1,10 @@
 # Exam Simulator
 
-Timed exam simulator supporting multiple certification subjects, picked from a selector in the header. Opens on **Datadog Fundamentals** by default.
+Timed exam simulator supporting multiple certification subjects, picked from a selector in the header. No simulator is selected on load: choose one to see its exam setup and question bank. The choice is not remembered between visits (only an in-progress exam is resumed after a reload).
 
 ## Subjects
 
-- **Datadog Fundamentals** (default) — 90 community practice questions covering the certification syllabus (systems/networking basics, the Agent, tags & metrics, dashboards, monitors, APM, logs, integrations). Exam mode: 90 questions, 135 minutes, 60% to pass.
+- **Datadog Fundamentals** — 90 community practice questions covering the certification syllabus (systems/networking basics, the Agent, tags & metrics, dashboards, monitors, APM, logs, integrations). Exam mode: 90 questions, 135 minutes, 60% to pass.
 - **ITIL 4 Foundation** — 691 questions (612 consolidated from public banks plus 79 original exam-style questions), merged from public GitHub question banks with duplicates removed and conflicting answers adjudicated. Exam mode: 40 questions, 60 minutes, 65% to pass.
 - **VMware VCTA** — 139 original questions (25 with diagrams) written from the VMware Cloud Foundation 9.0 *Compute*, *Network*, and *Storage Fundamentals* lecture manuals. Exam length, time, and pass mark (40 q, 60 min, 70%) are estimates, not official values.
 - **VMware VCP-VCF** — 183 original questions (20 with diagrams) written from the VMware Cloud Foundation 9.0 *Build, Manage, and Secure* and *Automate and Operate* lecture manuals. Exam mode follows the published VCP-VCF Administrator format: 60 questions, 135 minutes; pass mark is a scaled 300/500, shown as an approximate 60%.

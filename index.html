@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Datadog Fundamentals — Exam Simulator</title>
+<title>Exam Simulator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -12,10 +12,11 @@
 <body>
 <div class="wrap">
 <header>
-  <div class="brand"><span id="brand-name">Datadog Fundamentals</span><br><span id="brand-span">Exam Simulator</span></div>
-  <div class="sub" id="banktag">— questions</div>
+  <div class="brand"><span id="brand-name">Certification</span><br><span id="brand-span">Exam Simulator</span></div>
+  <div class="sub" id="banktag">Choose a simulator to begin</div>
   <nav>
     <select id="subject-select" onchange="switchSubject(this.value)" aria-label="Subject">
+      <option value="" selected disabled>Select a simulator…</option>
       <option value="datadog">Datadog Fundamentals</option>
       <option value="itil">ITIL 4 Foundation</option>
       <option value="vcta">VMware Certified Technical Associate</option>
@@ -29,6 +30,8 @@
 <!-- SETUP -->
 <section id="v-setup">
   <div class="setup">
+    <p class="note" id="pick-note">Select a simulator from the list above to start.</p>
+    <div id="setup-form" class="hidden">
     <div class="field">
       <label for="mode">Mode</label>
       <select id="mode">
@@ -48,6 +51,7 @@
     <p class="note">Questions are drawn at random and shuffled, options included. Hover or tap
       <b>ES</b> next to any question or answer to see a Spanish translation — you answer in English, the way the real exam is set.</p>
     <div class="actions"><button class="btn primary" onclick="startExam()">Start exam</button></div>
+    </div>
   </div>
 </section>
 
@@ -106,9 +110,7 @@
 </section>
 
 <footer id="site-footer">
-  Consolidated from public GitHub question banks (Ditectrev, mtvbrianking) — duplicates merged,
-  conflicting answers adjudicated against ITIL 4 doctrine. Study aid only; not affiliated with
-  or endorsed by AXELOS or PeopleCert. ITIL® is a registered trade mark of AXELOS Limited.
+  Study aid only. Not affiliated with or endorsed by any certification body or vendor.
 </footer>
 </div>
 

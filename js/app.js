@@ -72,7 +72,6 @@ vcp:{
   footer:'Original practice questions written from the VMware Cloud Foundation 9.0 Build, Manage, and Secure and Automate and Operate lecture manuals. Exam length and time follow the published VCP-VCF Administrator format (60 questions, 135 minutes); the official pass mark is a scaled 300 of 500, shown here as an approximate 60%. Study aid only; not affiliated with or endorsed by Broadcom or VMware. ES tooltips are translated on demand.'
 }
 };
-const SUBJECT_KEY='quiz-subject';
 let SUBJECT=null, QMAP=null, browseInitedFor=null;
 function populateLenOptions(){
 const sel=$('len'); sel.innerHTML='';
@@ -87,12 +86,12 @@ if(!s) return;
 SUBJECT=s;
 ensureTopics(s);
 QMAP=new Map(s.questions.map(q=>[q.id,q]));
-try{ localStorage.setItem(SUBJECT_KEY,id); }catch(e){}
 document.title=s.title;
 $('brand-name').textContent=s.brand;
 $('brand-span').textContent=s.brandSpan;
 $('banktag').textContent=s.questions.length+' questions · '+s.bankTag;
 $('subject-select').value=id;
+$('setup-form').classList.remove('hidden'); $('pick-note').classList.add('hidden');
 $('site-footer').textContent=s.footer;
 const mins=Math.round(Number(s.defaultLen)*s.secPerQ/60);
 $('mode-exam-opt').textContent='Exam simulation — '+s.defaultLen+' questions, '+mins+' minutes, '+s.passPct+'% to pass';
@@ -100,7 +99,7 @@ populateLenOptions();
 browseInitedFor=null;
 }
 function switchSubject(id){
-if(!SUBJECT||id===SUBJECT.id) return;
+if(SUBJECT&&id===SUBJECT.id) return;
 if(session && !session.done){
   if(!confirm('Switching subject will discard your current exam progress. Continue?')){
     $('subject-select').value=SUBJECT.id; return;
@@ -176,11 +175,12 @@ let session=null, tick=null;
 const $=id=>document.getElementById(id);
 
 function go(view){
+if(!SUBJECT&&(view==='browse'||view==='exam'||view==='result')) view='setup';
 ['setup','exam','result','browse'].forEach(v=>$('v-'+v).classList.toggle('hidden',v!==view));
 $('nav-exam').setAttribute('aria-current',view==='setup'||view==='exam'||view==='result');
 $('nav-browse').setAttribute('aria-current',view==='browse');
 if(view!=='exam'&&tick){clearInterval(tick);tick=null;}
-if(view==='browse'&&browseInitedFor!==SUBJECT.id) initBrowse();
+if(view==='browse'&&SUBJECT&&browseInitedFor!==SUBJECT.id) initBrowse();
 window.scrollTo(0,0);
 }
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
@@ -208,7 +208,8 @@ try{
   if(!raw) return false;
   const state=JSON.parse(raw);
   if(!state||!Array.isArray(state.i)||!state.i.length||!Array.isArray(state.k)) return false;
-  if(state.subj && SUBJECTS[state.subj] && state.subj!==SUBJECT.id) setSubject(state.subj);
+  if(!SUBJECTS[state.subj]) return false;
+  if(!SUBJECT||state.subj!==SUBJECT.id) setSubject(state.subj);
   const items=state.i.map(([id,perm])=>{
     const orig=QMAP.get(id);
     if(!orig) throw new Error('unknown id '+id);
@@ -423,12 +424,5 @@ if(e.key==='ArrowLeft')move(-1);
 const i='abcdefgh'.indexOf(e.key.toLowerCase());
 if(i>=0){const b=$('q-opts').querySelectorAll('.opt')[i]; if(b&&!b.disabled)b.click();}
 });
-(function(){
-let initial='datadog';
-try{
-  const saved=localStorage.getItem(SUBJECT_KEY);
-  if(saved && SUBJECTS[saved]) initial=saved;
-}catch(e){}
-setSubject(initial);
-})();
+
 if(restoreSession()) enterExam(); else go('setup');
