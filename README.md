@@ -21,7 +21,10 @@ Adding another subject means dropping a `questions-<subject>.js` file (and optio
 ## Files
 
 ```
-index.html                  UI, exam engine, subject registry
+index.html                  markup
+css/styles.css              all styles
+js/app.js                   exam engine, subject registry
+data/img/                   question exhibit images (optional `image` field)
 data/questions-itil.js      QUESTIONS_ITIL
 data/es-itil.js             ES_TRANSLATIONS_ITIL
 data/questions-datadog.js   QUESTIONS_DATADOG
@@ -29,7 +32,7 @@ data/questions-datadog.js   QUESTIONS_DATADOG
 
 ## Publish on GitHub Pages
 
-1. Create a repo and push `index.html`, `data/`, `.nojekyll`, `README.md` to `main`.
+1. Create a repo and push `index.html`, `css/`, `js/`, `data/`, `.nojekyll`, `README.md` to `main`.
 2. Settings → Pages → Source: *Deploy from a branch* → `main` / `(root)`.
 3. Live at `https://<user>.github.io/<repo>/`.
 
