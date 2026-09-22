@@ -194,7 +194,11 @@ try{
     const orig=QMAP.get(it.id);
     return [it.id, it.options.map(o=>orig.options.indexOf(o))];
   });
-  const picks=session.picks.map((p,i)=>p==null?-1:session.items[i].options.indexOf(p));
+  const picks=session.picks.map((p,i)=>{
+    if(p==null) return -1;
+    const opts=session.items[i].options;
+    return Array.isArray(p)?p.map(x=>opts.indexOf(x)):opts.indexOf(p);
+  });
   const state={subj:SUBJECT.id,m:session.mode,l:session.left,p:session.pos,i:items,k:picks};
   localStorage.setItem(SESSION_KEY,JSON.stringify(state));
 }catch(e){}
@@ -215,7 +219,11 @@ try{
     if(!orig) throw new Error('unknown id '+id);
     return {...orig,options:perm.map(idx=>orig.options[idx])};
   });
-  const picks=state.k.map((idx,i)=>idx<0?null:items[i].options[idx]);
+  const picks=state.k.map((idx,i)=>{
+    if(idx===-1) return null;
+    const opts=items[i].options;
+    return Array.isArray(idx)?idx.map(j=>opts[j]):opts[idx];
+  });
   session={mode:state.m,items,picks,pos:state.p||0,left:state.l,done:false};
   return true;
 }catch(e){ return false; }
@@ -259,13 +267,21 @@ session.items.forEach((_,i)=>{
   r.appendChild(b);
 });
 }
+function isMulti(q){ return q.answers.length>1; }
+function sameSet(picked,answers){
+if(picked==null) return false;
+const arr=Array.isArray(picked)?picked:[picked];
+if(arr.length!==answers.length) return false;
+const set=new Set(answers);
+return arr.every(x=>set.has(x));
+}
 function paintRail(){
 [...$('rail').children].forEach((b,i)=>{
   b.className='tick';
   const picked=session.picks[i];
   if(session.done){
     if(picked==null) b.classList.add('bad');
-    else b.classList.add(session.items[i].answers.includes(picked)?'ok':'bad');
+    else b.classList.add(sameSet(picked,session.items[i].answers)?'ok':'bad');
   } else if(picked!=null) b.classList.add('done');
   if(session.items[i].needs_review) b.classList.add('flag');
   if(i===session.pos) b.classList.add('here');
@@ -278,23 +294,30 @@ const es=esEntry(q.id), orig=QMAP.get(q.id);
 $('m-pos').textContent=session.pos+1;
 $('m-done').textContent=session.picks.filter(p=>p!=null).length;
 $('q-id').textContent=q.id.toUpperCase()+' · '+q.topic;
-$('q-flag').textContent=q.needs_review?'⚑ flagged — sources disagree':'';
+const multi=isMulti(q);
+const flagParts=[];
+if(q.needs_review) flagParts.push('⚑ flagged — sources disagree');
+if(multi) flagParts.push('Select '+q.answers.length+' answers');
+$('q-flag').textContent=flagParts.join(' · ');
 const qtextEl=$('q-text'); qtextEl.innerHTML='';
 qtextEl.append(document.createTextNode(q.question), trBadge(q.question, es&&es.q));
 const qi=qImg(q); if(qi) qtextEl.append(qi);
 const box=$('q-opts'); box.innerHTML='';
-const reveal=session.mode==='practice'&&session.picks[session.pos]!=null;
+const picked=session.picks[session.pos];
+const pickedArr=multi?(picked||[]):null;
+const reveal=session.mode==='practice' && (multi ? Array.isArray(picked)&&picked.length>=q.answers.length : picked!=null);
 q.options.forEach((o,i)=>{
   const row=document.createElement('div'); row.className='opt-row';
   const b=document.createElement('button');
   b.type='button'; b.className='opt';
-  b.setAttribute('aria-pressed',session.picks[session.pos]===o);
+  const isSel=multi?pickedArr.includes(o):picked===o;
+  b.setAttribute('aria-pressed',isSel);
   b.innerHTML='<span class="k">'+'ABCDEFGH'[i]+'</span><span></span>';
   b.lastChild.textContent=o;
   if(reveal){
     b.disabled=true;
     if(q.answers.includes(o)) b.classList.add('correct');
-    else if(session.picks[session.pos]===o) b.classList.add('wrong');
+    else if(isSel) b.classList.add('wrong');
   } else b.onclick=()=>pick(o);
   row.appendChild(b);
   const oi=orig.options.indexOf(o);
@@ -304,6 +327,15 @@ q.options.forEach((o,i)=>{
 paintRail();
 }
 function pick(o){
+const q=session.items[session.pos];
+if(isMulti(q)){
+  const cur=session.picks[session.pos]||[];
+  const idx=cur.indexOf(o);
+  const next=idx>=0?cur.filter(x=>x!==o):[...cur,o];
+  session.picks[session.pos]=next.length?next:null;
+  saveSession(); renderQ();
+  return;
+}
 session.picks[session.pos]=o;
 saveSession();
 if(session.mode==='practice') renderQ();
@@ -327,7 +359,7 @@ clearSession();
 const total=session.items.length;
 let right=0; const byTopic={}, misses=[];
 session.items.forEach((q,i)=>{
-  const p=session.picks[i], ok=p!=null&&q.answers.includes(p);
+  const p=session.picks[i], ok=sameSet(p,q.answers);
   byTopic[q.topic]??={n:0,ok:0};
   byTopic[q.topic].n++; if(ok){right++;byTopic[q.topic].ok++;}
   else misses.push({q,p});
@@ -356,7 +388,7 @@ misses.forEach(({q,p})=>{
   const mk=(lbl,val,cls)=>{const r=document.createElement('div');r.className='row';
     const i=document.createElement('i');i.textContent=lbl;const s=document.createElement('span');
     s.className=cls;s.textContent=val;r.append(i,s);return r;};
-  d.appendChild(mk('You',p??'— not answered','yours'));
+  d.appendChild(mk('You',(p==null?null:(Array.isArray(p)?p.join(' / '):p))??'— not answered','yours'));
   d.appendChild(mk('Answer',q.answers.join(' / '),'right'));
   d.appendChild(mk('Area',q.topic,''));
   if(q.needs_review){const f=document.createElement('div');f.className='flagline';
