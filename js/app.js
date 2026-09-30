@@ -70,6 +70,18 @@ vcp:{
   defaultLen:'60',
   bankTag:'VCF Build/Manage/Secure + Automate/Operate',
   footer:'Original practice questions written from the VMware Cloud Foundation 9.0 Build, Manage, and Secure and Automate and Operate lecture manuals. Exam length and time follow the published VCP-VCF Administrator format (60 questions, 135 minutes); the official pass mark is a scaled 300 of 500, shown here as an approximate 60%. Study aid only; not affiliated with or endorsed by Broadcom or VMware. ES tooltips are translated on demand.'
+},
+otca:{
+  id:'otca', brand:'OpenTelemetry OTCA', brandSpan:'Exam Simulator',
+  title:'OpenTelemetry OTCA — Exam Simulator',
+  questions:(typeof QUESTIONS_OTCA!=='undefined')?QUESTIONS_OTCA:[],
+  es:(typeof ES_TRANSLATIONS_OTCA!=='undefined')?ES_TRANSLATIONS_OTCA:{},
+  topics:[],
+  passPct:75, secPerQ:90,
+  lenOptions:[[60,'60 questions (official exam length)'],[40,'40 questions'],[20,'20 questions'],[0,'Everything in the bank']],
+  defaultLen:'60',
+  bankTag:'telemetrydrops.com practice pool',
+  footer:'Practice questions from the Telemetry Drops OTCA practice exam (299-question pool). Format: 60 questions, 90 minutes, 75% to pass. Study aid only; not affiliated with or endorsed by the CNCF or The Linux Foundation. ES tooltips are translated on demand.'
 }
 };
 let SUBJECT=null, QMAP=null, browseInitedFor=null;
