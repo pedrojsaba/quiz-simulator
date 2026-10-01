@@ -81,7 +81,7 @@ otca:{
   lenOptions:[[60,'60 questions (official exam length)'],[40,'40 questions'],[20,'20 questions'],[0,'Everything in the bank']],
   defaultLen:'60',
   bankTag:'telemetrydrops.com practice pool',
-  footer:'Practice questions from the Telemetry Drops OTCA practice exam (299-question pool). Format: 60 questions, 90 minutes, 75% to pass. Study aid only; not affiliated with or endorsed by the CNCF or The Linux Foundation. ES tooltips are translated on demand.'
+  footer:'Practice questions from the Telemetry Drops OTCA practice exam (289-question pool). Format: 60 questions, 90 minutes, 75% to pass. Study aid only; not affiliated with or endorsed by the CNCF or The Linux Foundation. ES tooltips are translated on demand.'
 }
 };
 let SUBJECT=null, QMAP=null, browseInitedFor=null;

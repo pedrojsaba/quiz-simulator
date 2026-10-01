@@ -8,7 +8,7 @@ Timed exam simulator supporting multiple certification subjects, picked from a s
 - **ITIL 4 Foundation** — 691 questions (612 consolidated from public banks plus 79 original exam-style questions), merged from public GitHub question banks with duplicates removed and conflicting answers adjudicated. Exam mode: 40 questions, 60 minutes, 65% to pass.
 - **VMware VCTA** — 139 original questions (25 with diagrams) written from the VMware Cloud Foundation 9.0 *Compute*, *Network*, and *Storage Fundamentals* lecture manuals. Exam length, time, and pass mark (40 q, 60 min, 70%) are estimates, not official values.
 - **VMware VCP-VCF** — 195 original questions (20 with diagrams, 12 multi-select) written from the VMware Cloud Foundation 9.0 *Build, Manage, and Secure* and *Automate and Operate* lecture manuals. Exam mode follows the published VCP-VCF Administrator format: 60 questions, 135 minutes, multiple choice + multiple choice multiple selection; pass mark is a scaled 300/500, shown as an approximate 60%.
-- **OpenTelemetry OTCA** — 299 questions from the Telemetry Drops OTCA practice pool (4 domains: observability fundamentals, API & SDK, Collector, maintaining & debugging). Exam mode: 60 questions, 90 minutes, 75% to pass.
+- **OpenTelemetry OTCA** — 289 questions from the Telemetry Drops OTCA practice pool (4 domains: observability fundamentals, API & SDK, Collector, maintaining & debugging). Exam mode: 60 questions, 90 minutes, 75% to pass.
 
 Adding another subject means dropping a `questions-<subject>.js` file (and optionally an `es-<subject>.js` translation file) into `data/`, then adding a `<script>` tag and a `<select>` option in `index.html` and an entry in the `SUBJECTS` map in `js/app.js`.
 
