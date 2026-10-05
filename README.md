@@ -5,6 +5,7 @@ Timed exam simulator supporting multiple certification subjects, picked from a s
 ## Subjects
 
 - **Datadog Fundamentals** — 90 community practice questions covering the certification syllabus (systems/networking basics, the Agent, tags & metrics, dashboards, monitors, APM, logs, integrations). Exam mode: 90 questions, 135 minutes, 60% to pass.
+- **Datadog APM** — 100 questions on APM & Distributed Tracing Fundamentals (APM fundamentals, instrumentation, insight discovery, visualizing insights, troubleshooting), from the open-exam-prep.com bank. Exam length, time, and pass mark (40 q, 60 min, 70%) are estimates.
 - **ITIL 4 Foundation** — 691 questions (612 consolidated from public banks plus 79 original exam-style questions), merged from public GitHub question banks with duplicates removed and conflicting answers adjudicated. Exam mode: 40 questions, 60 minutes, 65% to pass.
 - **VMware VCTA** — 139 original questions (25 with diagrams) written from the VMware Cloud Foundation 9.0 *Compute*, *Network*, and *Storage Fundamentals* lecture manuals. Exam length, time, and pass mark (40 q, 60 min, 70%) are estimates, not official values.
 - **VMware VCP-VCF** — 195 original questions (20 with diagrams, 12 multi-select) written from the VMware Cloud Foundation 9.0 *Build, Manage, and Secure* and *Automate and Operate* lecture manuals. Exam mode follows the published VCP-VCF Administrator format: 60 questions, 135 minutes, multiple choice + multiple choice multiple selection; pass mark is a scaled 300/500, shown as an approximate 60%.
@@ -32,6 +33,7 @@ js/app.js                   exam engine, subject registry
 data/questions-itil.js      QUESTIONS_ITIL
 data/es-itil.js             ES_TRANSLATIONS_ITIL
 data/questions-datadog.js   QUESTIONS_DATADOG
+data/questions-datadog-apm.js QUESTIONS_DATADOG_APM
 data/questions-vcta.js      QUESTIONS_VCTA
 data/questions-vcp.js       QUESTIONS_VCP
 data/questions-otca.js      QUESTIONS_OTCA

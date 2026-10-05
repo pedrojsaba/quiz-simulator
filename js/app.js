@@ -47,6 +47,18 @@ datadog:{
   bankTag:'community exam-prep bank',
   footer:'Community practice questions covering the Datadog Fundamentals certification syllabus. Study aid only; not affiliated with or endorsed by Datadog, Inc. ES tooltips for this bank are translated on demand rather than pre-translated.'
 },
+datadogapm:{
+  id:'datadogapm', brand:'Datadog APM', brandSpan:'Exam Simulator',
+  title:'Datadog APM — Exam Simulator',
+  questions:(typeof QUESTIONS_DATADOG_APM!=='undefined')?QUESTIONS_DATADOG_APM:[],
+  es:(typeof ES_TRANSLATIONS_DATADOG_APM!=='undefined')?ES_TRANSLATIONS_DATADOG_APM:{},
+  topics:[],
+  passPct:70, secPerQ:90,
+  lenOptions:[[40,'40 questions'],[20,'20 questions'],[60,'60 questions'],[0,'Everything in the bank']],
+  defaultLen:'40',
+  bankTag:'APM & Distributed Tracing Fundamentals',
+  footer:'Practice questions for the Datadog APM & Distributed Tracing Fundamentals certification, sourced from the open-exam-prep.com Datadog APM Specialist bank and checked against Datadog documentation. Question count, time limit, and pass mark are estimates, not official values. Study aid only; not affiliated with or endorsed by Datadog, Inc. ES tooltips are translated on demand.'
+},
 vcta:{
   id:'vcta', brand:'VMware VCTA', brandSpan:'Exam Simulator',
   title:'VMware VCTA — Exam Simulator',
