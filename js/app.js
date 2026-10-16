@@ -94,6 +94,18 @@ otca:{
   defaultLen:'60',
   bankTag:'telemetrydrops.com practice pool',
   footer:'Practice questions from the Telemetry Drops OTCA practice exam (289-question pool). Format: 60 questions, 90 minutes, 75% to pass. Study aid only; not affiliated with or endorsed by the CNCF or The Linux Foundation. ES tooltips are translated on demand.'
+},
+vcfts:{
+  id:'vcfts', brand:'VCF Troubleshooting', brandSpan:'Exam Simulator',
+  title:'VCF Troubleshooting — Exam Simulator',
+  questions:(typeof QUESTIONS_VCFTS!=='undefined')?QUESTIONS_VCFTS:[],
+  es:(typeof ES_TRANSLATIONS_VCFTS!=='undefined')?ES_TRANSLATIONS_VCFTS:{},
+  topics:[],
+  passPct:70, secPerQ:90,
+  lenOptions:[[40,'40 questions'],[60,'60 questions'],[20,'20 questions'],[0,'Everything in the bank']],
+  defaultLen:'40',
+  bankTag:'VCF Troubleshooting [V9.1] lecture/lab manual',
+  footer:'Original practice questions written from the VMware Cloud Foundation Troubleshooting [V9.1] lecture/lab manual (log paths, esxcli/nsxcli/kubectl commands, troubleshooting workflows across compute, storage, networking, licensing, and automation). This course is not a numbered certification exam, so question count, time limit, and pass mark are estimates, not official values. Includes multiple choice multiple selection questions. Study aid only; not affiliated with or endorsed by Broadcom or VMware. ES tooltips are translated on demand.'
 }
 };
 let SUBJECT=null, QMAP=null, browseInitedFor=null;
