@@ -106,6 +106,18 @@ vcfts:{
   defaultLen:'40',
   bankTag:'VCF Troubleshooting [V9.1] lecture/lab manual',
   footer:'Original practice questions written from the VMware Cloud Foundation Troubleshooting [V9.1] lecture/lab manual (log paths, esxcli/nsxcli/kubectl commands, troubleshooting workflows across compute, storage, networking, licensing, and automation). This course is not a numbered certification exam, so question count, time limit, and pass mark are estimates, not official values. Includes multiple choice multiple selection questions. Study aid only; not affiliated with or endorsed by Broadcom or VMware. ES tooltips are translated on demand.'
+},
+bmcdisc:{
+  id:'bmcdisc', brand:'BMC Discovery', brandSpan:'Exam Simulator',
+  title:'BMC Discovery Certified Associate — Exam Simulator',
+  questions:(typeof QUESTIONS_BMCDISC!=='undefined')?QUESTIONS_BMCDISC:[],
+  es:(typeof ES_TRANSLATIONS_BMCDISC!=='undefined')?ES_TRANSLATIONS_BMCDISC:{},
+  topics:[],
+  passPct:80, secPerQ:144,
+  lenOptions:[[50,'50 questions (official exam length)'],[25,'25 questions'],[75,'75 questions'],[0,'Everything in the bank']],
+  defaultLen:'50',
+  bankTag:'BMC Discovery 24.x Administering (Part 1, Part 2, On-Premises)',
+  footer:'Original practice questions written from the BMC Discovery 24.x Fundamentals Administering (Part 1 and Part 2) and Fundamentals On-Premises Administering lecture/lab manuals — covering taxonomy, patterns, discovery scanning, credentials, Outposts, the discovery process, troubleshooting, visualizations, query language, dashboards, storage/load balancer and cloud discovery, CMDB Sync, security, the REST API, clustering, consolidation, backup/restore, the CLI, and appliance support. Format follows the published BMC Certified Associate: Discovery exam details (50 questions, 120 minutes, 80% to pass, single answer and multiple answers). Includes multiple choice multiple selection questions. Study aid only; not affiliated with or endorsed by BMC Software, Inc. ES tooltips are translated on demand.'
 }
 };
 let SUBJECT=null, QMAP=null, browseInitedFor=null;

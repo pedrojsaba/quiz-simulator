@@ -11,14 +11,15 @@ Timed exam simulator supporting multiple certification subjects, picked from a s
 - **VMware VCP-VCF** — 195 original questions (20 with diagrams, 12 multi-select) written from the VMware Cloud Foundation 9.0 *Build, Manage, and Secure* and *Automate and Operate* lecture manuals. Exam mode follows the published VCP-VCF Administrator format: 60 questions, 135 minutes, multiple choice + multiple choice multiple selection; pass mark is a scaled 300/500, shown as an approximate 60%.
 - **OpenTelemetry OTCA** — 289 questions from the Telemetry Drops OTCA practice pool (4 domains: observability fundamentals, API & SDK, Collector, maintaining & debugging). Exam mode: 60 questions, 90 minutes, 75% to pass.
 - **VCF Troubleshooting** — 256 original questions (239 single-choice, 17 multi-select), no images, written from the VMware Cloud Foundation Troubleshooting [V9.1] lecture/lab manual. Covers log file locations, esxcli/nsxcli/kubectl commands, and troubleshooting workflows across VCF Operations, deployment, upgrades, licensing, workload domains, compute, networking, storage, fleet management, and VCF Automation. Not a numbered certification exam, so length/time/pass mark (40 q, 60 min, 70%) are estimates.
+- **BMC Discovery** — 146 original questions (122 single-choice, 24 multi-select, 5 with original diagrams), written from the BMC Discovery 24.x Fundamentals Administering (Part 1 and Part 2) and Fundamentals On-Premises Administering lecture/lab manuals. Covers taxonomy, patterns, discovery scanning, credentials, Outposts, the discovery process, troubleshooting, visualizations, query language, dashboards, storage/load balancer and cloud discovery, CMDB Sync, security, the REST API, clustering, consolidation, backup/restore, the CLI, and appliance support. Exam mode follows the published BMC Certified Associate: Discovery exam details: 50 questions, 120 minutes, single answer and multiple answers, 80% to pass.
 
 Adding another subject means dropping a `questions-<subject>.js` file (and optionally an `es-<subject>.js` translation file) into `data/`, then adding a `<script>` tag and a `<select>` option in `index.html` and an entry in the `SUBJECTS` map in `js/app.js`.
 
 ## Features
 
 - **Exam mode** — question count / time limit / pass mark per subject (official for ITIL, Datadog, and VCP-VCF; estimated for VCTA).
-- **Question images** — a question can carry an optional `"image": "data/img/..."` field; the exhibit shows under the question text in exam, practice, review, and the question bank. Datadog `dd015` and `dd047` use placeholder images (`data/img/dd015.svg`, `data/img/dd047.svg`) to be replaced with the originals.
-- **Multi-select questions** — a question with more than one entry in `"answers"` renders as checkboxes ("Select N answers") instead of single-choice, and grades as correct only when the full set matches, no partial credit. Used by VCP-VCF's 12 and VCF Troubleshooting's 17 multiple choice multiple selection questions.
+- **Question images** — a question can carry an optional `"image": "data/img/..."` field; the exhibit shows under the question text in exam, practice, review, and the question bank. Datadog `dd015` and `dd047` use placeholder images (`data/img/dd015.svg`, `data/img/dd047.svg`) to be replaced with the originals. BMC Discovery's `data/img/bmcdisc/` holds 5 original diagrams (proxy ports, Outpost sizing, cluster fault tolerance, consolidation firewall port, discovery port map) hand-drawn for this bank, since its source manuals held no extractable diagrams.
+- **Multi-select questions** — a question with more than one entry in `"answers"` renders as checkboxes ("Select N answers") instead of single-choice, and grades as correct only when the full set matches, no partial credit. Used by VCP-VCF's 12, VCF Troubleshooting's 17, and BMC Discovery's 24 multiple choice multiple selection questions.
 - **Practice mode** — instant feedback per question.
 - **Question bank** — search and filter each subject's questions with their answers.
 - **ES translation** — hover or tap the small `ES` tag next to any question or answer option for an inline Spanish translation tooltip. ITIL's 691 question stems and options are pre-translated in `data/es-itil.js` (no network call, no rate limit); Datadog, VCTA, and VCP-VCF are translated on demand via `mymemory.translated.net` the first time each one is viewed, then cached. Questions stay in English, as on the real exam.
@@ -39,9 +40,11 @@ data/questions-vcta.js      QUESTIONS_VCTA
 data/questions-vcp.js       QUESTIONS_VCP
 data/questions-otca.js      QUESTIONS_OTCA
 data/questions-vcfts.js     QUESTIONS_VCFTS
+data/questions-bmcdisc.js   QUESTIONS_BMCDISC
 data/img/                   placeholder exhibits for Datadog (dd015, dd047)
 data/img/vcta/              diagrams extracted from the VCTA lecture manuals
 data/img/vcp/               diagrams extracted from the VCP-VCF lecture manuals
+data/img/bmcdisc/           original diagrams drawn for the BMC Discovery bank
 ```
 
 ## Publish on GitHub Pages
@@ -64,7 +67,9 @@ No questions remain flagged `needs_review`.
 
 **VMware VCTA, VCP-VCF, and VCF Troubleshooting:** Original questions written from VMware Cloud Foundation lecture/lab manuals (9.0 Compute, Network, Storage Fundamentals; 9.0 Build, Manage, and Secure; 9.0 Automate and Operate; 9.1 Troubleshooting). Distractors are authored, not taken from the manuals, and the answers have not been reviewed by a VMware-certified expert. VCTA and VCP-VCF diagrams are extracted from their source manuals; VCF Troubleshooting has no images since its source was pasted text only. VCP-VCF exam format (60 questions, 135 minutes, scaled 300/500) comes from Broadcom's published exam details; VCTA and VCF Troubleshooting values are estimates (the latter is a lab/lecture course, not a numbered exam).
 
+**BMC Discovery:** Original questions written from the BMC Discovery 24.x Fundamentals Administering (Part 1 and Part 2) and Fundamentals On-Premises Administering lecture/lab manuals. Distractors are authored, not taken from the manuals, and the answers have not been reviewed by a BMC-certified expert. The source manuals were supplied as pasted text with no extractable diagrams, so 5 questions instead carry original SVG diagrams drawn to illustrate the manuals' own facts (proxy ports, Outpost sizing, cluster fault tolerance, consolidation firewall port, discovery port map). Exam format (50 questions, 120 minutes, 80% to pass, single + multiple answer) comes from the manuals' own published BMC Certified Associate: Discovery exam details.
+
 ## Disclaimer
 
-Study aid only. Not affiliated with or endorsed by AXELOS, PeopleCert, Datadog, Inc., Broadcom, or VMware.
+Study aid only. Not affiliated with or endorsed by AXELOS, PeopleCert, Datadog, Inc., Broadcom, VMware, or BMC Software, Inc.
 ITIL® is a registered trade mark of AXELOS Limited. Question text belongs to its original authors.

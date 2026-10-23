@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 220" font-family="Arial,Helvetica,sans-serif">
+<style>
+ .box{fill:#f4f6f8;stroke:#334;stroke-width:1.5}
+ .fw{fill:#fde8e8;stroke:#a33;stroke-width:1.6}
+ .lbl{font-size:13px;fill:#1a1a2e}
+ .port{font-size:12px;fill:#a33;font-weight:bold}
+ .arrow{stroke:#334;stroke-width:1.6;fill:none;marker-end:url(#ah2)}
+ .cap{font-size:12px;fill:#555}
+</style>
+<defs>
+ <marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+  <path d="M0,0 L6,3 L0,6 Z" fill="#334"/>
+ </marker>
+</defs>
+<rect x="20" y="70" width="150" height="60" rx="6" class="box"/>
+<text x="95" y="95" text-anchor="middle" class="lbl">Scanning</text>
+<text x="95" y="113" text-anchor="middle" class="lbl">Appliance</text>
+
+<rect x="235" y="60" width="150" height="80" class="fw"/>
+<text x="310" y="95" text-anchor="middle" class="lbl">FIREWALL</text>
+<text x="310" y="113" text-anchor="middle" class="port">TCP 25032</text>
+
+<rect x="450" y="70" width="150" height="60" rx="6" class="box"/>
+<text x="525" y="95" text-anchor="middle" class="lbl">Consolidation</text>
+<text x="525" y="113" text-anchor="middle" class="lbl">Appliance</text>
+
+<line x1="170" y1="100" x2="233" y2="100" class="arrow"/>
+<line x1="387" y1="100" x2="448" y2="100" class="arrow"/>
+
+<text x="310" y="175" text-anchor="middle" class="cap">Scan data (DDD) crosses the firewall on TCP 25032 — the only port needed for consolidation</text>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 260" font-family="Arial,Helvetica,sans-serif">
+<style>
+ .hdr{fill:#1a1a2e}
+ .hdrt{font-size:14px;fill:#fff;font-weight:bold}
+ .box{fill:#f4f6f8;stroke:#334;stroke-width:1.5}
+ .lbl{font-size:13px;fill:#1a1a2e}
+ .cap{font-size:12px;fill:#555}
+</style>
+<rect x="20" y="20" width="160" height="34" class="hdr" rx="4"/>
+<text x="100" y="42" text-anchor="middle" class="hdrt">UNIX / Linux</text>
+<rect x="20" y="54" width="160" height="30" class="box"/><text x="100" y="74" text-anchor="middle" class="lbl">22 — SSH</text>
+<rect x="20" y="84" width="160" height="30" class="box"/><text x="100" y="104" text-anchor="middle" class="lbl">23 — Telnet</text>
+<rect x="20" y="114" width="160" height="30" class="box"/><text x="100" y="134" text-anchor="middle" class="lbl">513 — rlogin</text>
+
+<rect x="200" y="20" width="160" height="34" class="hdr" rx="4"/>
+<text x="280" y="42" text-anchor="middle" class="hdrt">Windows</text>
+<rect x="200" y="54" width="160" height="30" class="box"/><text x="280" y="74" text-anchor="middle" class="lbl">5985 — HTTP PowerShell</text>
+<rect x="200" y="84" width="160" height="30" class="box"/><text x="280" y="104" text-anchor="middle" class="lbl">5986 — HTTPS PowerShell</text>
+<rect x="200" y="114" width="160" height="30" class="box"/><text x="280" y="134" text-anchor="middle" class="lbl">135 — DCE RPC</text>
+
+<rect x="380" y="20" width="160" height="34" class="hdr" rx="4"/>
+<text x="460" y="42" text-anchor="middle" class="hdrt">SNMP</text>
+<rect x="380" y="54" width="160" height="30" class="box"/><text x="460" y="74" text-anchor="middle" class="lbl">UDP 161</text>
+
+<text x="280" y="190" text-anchor="middle" class="cap">Credential selection order on first scan: UNIX ports, then Windows ports, then SNMP (tried last — most limited data)</text>
+</svg>

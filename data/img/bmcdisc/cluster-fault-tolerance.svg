@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 280" font-family="Arial,Helvetica,sans-serif">
+<style>
+ .box{fill:#f4f6f8;stroke:#334;stroke-width:1.5}
+ .co{fill:#e8eef8;stroke:#245;stroke-width:1.8}
+ .lbl{font-size:13px;fill:#1a1a2e}
+ .data{font-size:12px;fill:#a33}
+ .cap{font-size:12px;fill:#555}
+</style>
+<text x="280" y="24" text-anchor="middle" font-size="15" fill="#1a1a2e">4-member cluster — fault tolerant copies of nodes A, B, C, D</text>
+
+<rect x="20" y="60" width="130" height="70" rx="6" class="co"/>
+<text x="85" y="82" text-anchor="middle" class="lbl">Coordinator</text>
+<text x="85" y="100" text-anchor="middle" class="data">owns A</text>
+<text x="85" y="116" text-anchor="middle" class="data">copy B, D</text>
+
+<rect x="170" y="60" width="130" height="70" rx="6" class="box"/>
+<text x="235" y="82" text-anchor="middle" class="lbl">Member 1</text>
+<text x="235" y="100" text-anchor="middle" class="data">owns B</text>
+<text x="235" y="116" text-anchor="middle" class="data">copy A, C</text>
+
+<rect x="320" y="60" width="130" height="70" rx="6" class="box"/>
+<text x="385" y="82" text-anchor="middle" class="lbl">Member 2</text>
+<text x="385" y="100" text-anchor="middle" class="data">owns C</text>
+<text x="385" y="116" text-anchor="middle" class="data">copy A, D</text>
+
+<rect x="170" y="160" width="130" height="70" rx="6" class="box" stroke-dasharray="4,3"/>
+<text x="235" y="182" text-anchor="middle" class="lbl">Member 3</text>
+<text x="235" y="200" text-anchor="middle" class="data">owns D</text>
+<text x="235" y="216" text-anchor="middle" class="data">(down)</text>
+
+<text x="280" y="255" text-anchor="middle" class="cap">Each node has 2 live copies in a 3-8 machine cluster, so losing Member 3 does not lose node D</text>
+</svg>
